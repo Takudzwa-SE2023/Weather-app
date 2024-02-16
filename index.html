@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+<!-- This is a container div for the entire card -->
+<div class="card">
+    <!-- This is a container div for the search-related content -->
+    <div class="search">
+        <!-- Input field for entering the city name -->
+        <input type="text" 
+               placeholder="Enter City name" 
+               spellcheck="false">
+        
+        <!-- Button for triggering the search action -->
+        <button>
+            <!-- Search icon image -->
+            <img src="images/search.png" alt="">
+        </button>
+    </div>
+
+    <div class="error">
+        <p> Invalid City name</p>
+    </div>
+
+
+    <div class="weather">
+        <img src="images/rain.png" class="weather-icon">
+        <h1 class="temp">22°c</h1>
+        <h2 class="city">New York</h2>
+        <div class="detail">
+            <div class="col">
+                <img src="images/humidity.png">
+                <div>
+                    <p class="humidity">50%</p>
+                    <p>Humidity</p>
+                </div>
+            </div>
+            <div class="col">
+                <img src="images/wind.png">
+                <div>
+                    <p class="wind">15 km/h</p>
+                    <p>Wind Speed</p>
+                </div>
+            </div>
+        </div>
+        <!-- Share buttons with images -->
+        <div class="share-container">
+            <div class="facebook-btn" data-tooltip="Share to Facebook" onclick="shareToFacebook()">
+                <img src="images/facebook-icon.png" alt="Share to Facebook">
+            </div>
+            <div class="twitter-btn" data-tooltip="Share to Twitter" onclick="shareToTwitter()">
+                <img src="images/twitter-icon.png" alt="Share to Twitter">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+<!--the constant apiKey and Api url where we will be grtting information
+    const apikey = "ec69f47dbbeef73049972af8d3d0e3ce";
+    const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+    //variable for when we insert city name and press the search button (should recive other city weather details)
+    const searchBox = document.querySelector(".search input");
+    const searchBtn = document.querySelector(".search button");
+    const weatherIcon = document.querySelector(".weather-icon");
+    
+    async function checkWeather(city){
+        const response = await fetch(apiUrl + city + `&appid=${apikey}`);
+
+        if(response.status ==404){
+            document.querySelector(".error").style.display = "block";
+            document.querySelector(".weather").style.display = "none";
+        } else{
+
+            var data = await response.json();
+
+// view all data as it is from the website(we get the inner HTML of the places)
+        document.querySelector(".city").innerHTML = data.name;
+        document.querySelector(".temp").innerHTML = Math.round(data.main.temp )+ "°c";
+        document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+        document.querySelector(".wind").innerHTML = data.wind.speed + "km/h";
+
+        if (data.weather[0].main == "clouds") {
+                weatherIcon.src = "images/clouds.png";
+
+        }
+        else if (data.weather[0].main == "Clear") {
+                weatherIcon.src = "images/clear.png";
+
+        }
+        else if (data.weather[0].main == "Rain"){
+                weatherIcon.src = "images/rain.png";
+                
+        }
+        else if (data.weather[0].main == "Drizzle"){
+                weatherIcon.src = "images/drizzle.png";
+
+        }
+        else if (data.weather[0].main == "Mist"){
+                weatherIcon.src = "images/mist.png";
+        }
+// when we open the app we dont want to see any current weather for any city  until there is a click event on the search button
+        document.querySelector(".weather").style.display = "block";
+        document.querySelector(".error").style.display = "none";
+
+        }
+
+}
+
+    searchBtn.addEventListener("click", ()=>{
+//call checkweather function inorder for the function to work
+    checkWeather(searchBox.value);
+    });
+
+    // Custom share functions
+    function shareToFacebook() {
+        const city = document.querySelector(".city").innerHTML;
+        const temperature = document.querySelector(".temp").innerHTML;
+        const url = window.location.href;
+        const shareText = `Check the weather in ${city}! It's ${temperature}.`;
+        const facebookShareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(shareText)}`;
+        window.open(facebookShareLink, '_blank');
+    }
+
+    function shareToTwitter() {
+        const city = document.querySelector(".city").innerHTML;
+        const temperature = document.querySelector(".temp").innerHTML;
+        const url = window.location.href;
+        const shareText = `Check the weather in ${city}! It's ${temperature}.`;
+        const twitterShareLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(url)}`;
+        window.open(twitterShareLink, '_blank');
+    }
+</script>
+
+
+    
+</body>
+</html>
